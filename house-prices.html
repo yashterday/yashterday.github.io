@@ -1194,7 +1194,8 @@
   <span class="token comment">#check for null values which may mess with our predictions later on</span>
   features<span class="token punctuation">.</span>isnull<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>sort_values<span class="token punctuation">(</span>ascending <span class="token operator">=</span> <span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span>
   </code></pre>
-  <pre><code class="indented-code-block">PoolQC          2909
+  <pre><code class="indented-code-block">
+  PoolQC          2909
   MiscFeature     2814
   Alley           2721
   Fence           2348
@@ -1219,7 +1220,8 @@
   <pre><code class="fenced-code-block language-python"><span class="token comment">#double check the data type of each variable</span>
   features<span class="token punctuation">.</span>dtypes
   </code></pre>
-  <pre><code class="indented-code-block">Id                 int64
+  <pre><code class="indented-code-block">
+  Id                 int64
   MSSubClass         int64
   MSZoning          object
   LotFrontage      float64
@@ -1404,7 +1406,8 @@
 
   <h2 class="atx" id="feature-engineering">Feature Engineering</h2>
   <h3 class="atx" id="now-that-we-have-the-data-processed-its-time-to-add-additional-independent-variables-as-well-to-help-the-prediction-model-have-a-far-more-accurate-prediction">Now that we have the data processed its time to add additional independent variables as well to help the prediction model have a far more accurate prediction</h3>
-  <pre><code class="fenced-code-block language-python">features<span class="token punctuation">[</span><span class="token string">'total_yrs'</span><span class="token punctuation">]</span> <span class="token operator">=</span> features<span class="token punctuation">[</span><span class="token string">'YearRemodAdd'</span><span class="token punctuation">]</span> <span class="token operator">-</span> features<span class="token punctuation">[</span><span class="token string">'YearBuilt'</span><span class="token punctuation">]</span>  
+  <pre><code class="fenced-code-block language-python">
+  features<span class="token punctuation">[</span><span class="token string">'total_yrs'</span><span class="token punctuation">]</span> <span class="token operator">=</span> features<span class="token punctuation">[</span><span class="token string">'YearRemodAdd'</span><span class="token punctuation">]</span> <span class="token operator">-</span> features<span class="token punctuation">[</span><span class="token string">'YearBuilt'</span><span class="token punctuation">]</span>  
   features<span class="token punctuation">[</span><span class="token string">'total_sqrft'</span><span class="token punctuation">]</span> <span class="token operator">=</span> features<span class="token punctuation">[</span><span class="token string">'TotalBsmtSF'</span><span class="token punctuation">]</span> <span class="token operator">+</span> features<span class="token punctuation">[</span><span class="token string">'1stFlrSF'</span><span class="token punctuation">]</span> <span class="token operator">+</span> features<span class="token punctuation">[</span><span class="token string">'2ndFlrSF'</span><span class="token punctuation">]</span>
 
   features<span class="token punctuation">[</span><span class="token string">'total_sqr_footage'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>features<span class="token punctuation">[</span><span class="token string">'BsmtFinSF1'</span><span class="token punctuation">]</span> <span class="token operator">+</span> features<span class="token punctuation">[</span><span class="token string">'BsmtFinSF2'</span><span class="token punctuation">]</span> <span class="token operator">+</span> features<span class="token punctuation">[</span><span class="token string">'1stFlrSF'</span><span class="token punctuation">]</span> <span class="token operator">+</span> features<span class="token punctuation">[</span><span class="token string">'2ndFlrSF'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
@@ -1598,7 +1601,8 @@
   <pre><code class="fenced-code-block language-python"><span class="token comment"># double check for null</span>
   features<span class="token punctuation">.</span>isnull<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>sort_values<span class="token punctuation">(</span>ascending <span class="token operator">=</span> <span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span>
   </code></pre>
-  <pre><code class="indented-code-block">fireplace       0
+  <pre><code class="indented-code-block">
+  fireplace       0
   RoofMatl        0
   Exterior2nd     0
   MasVnrType      0
@@ -1635,7 +1639,8 @@
   </code></pre>
   <pre><code class="fenced-code-block language-python">X<span class="token punctuation">.</span>dtypes
   </code></pre>
-  <pre><code class="indented-code-block">Id                         int64
+  <pre><code class="indented-code-block">
+  Id                         int64
   LotFrontage              float64
   LotArea                    int64
   OverallQual                int64
