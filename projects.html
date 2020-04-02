@@ -7,8 +7,23 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="icon" href="/yashterday.github.io/img/favicon_io/android-chrome-512x512.png">
     <title>Yash Tanna's Portfolio</title>
+    <style type= 'text/css'>
+      body { 
+          background-color: #26282b;
+          background-repeat: no-repeat, repeat;
+          background-position: center;
+          background-size: cover;
+          padding-top: 0px ;}
+      .customJumboBg{
+          background-image: url("/yashterday.github.io/img/bg-jumbo.jpg");}
+      .btn-niceblue{
+        background-color: #5f85db;
+        color: white;
+      }
+</style>
+  </style>
   </head>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <nav class="navbar navbar-expand-lg navbar-dark">
     <a class="navbar-brand" href="/">Yash Tanna</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -32,7 +47,7 @@
     </div>
   </nav>
 
-  <div class="jumbotron text-center">
+  <div class="jumbotron text-center customJumboBg">
     <div class='container'>
       <div class='row'>
         <div class='col-md-6'>
@@ -46,28 +61,28 @@
   <!-- Cards showing project examples -->
   <div class='container'>
     <div class="card-deck">
-      <div class="card" style="width: 18rem;">
+      <div class="card bg-dark text-white" style="width: 18rem;">
         <img class="card-img-top" src="/yashterday.github.io/img/covid-19-pic.jpg" alt="Card image cap">
         <div class="card-body">
           <h5 class="card-title">COVID-19 Dashboard</h5>
           <p class="card-text">Create a Visual Breakdown of the spread of the COVID-19 virus</p>
-          <a href="covid-19.html" class="btn btn-primary">Dashboard</a>
+          <a href="covid-19.html" class="btn btn-niceblue">Dashboard</a>
         </div>
       </div>
-      <div class="card" style="width: 18rem;">
+      <div class="card bg-dark text-white" style="width: 18rem;">
         <img class="card-img-top" src="/yashterday.github.io/img/house-price.jpg" alt="Card image cap" style="height:220px;">
         <div class="card-body">
           <h5 class="card-title">House Prices Regression</h5>
           <p class="card-text">A regrssion model designed to predict the prices of houses based on 90 variables. Uses Ridge Regression and K-Folds.</p>
-          <a href="house-prices.html" class="btn btn-primary">Notebook</a>
+          <a href="house-prices.html" class="btn btn-niceblue">Notebook</a>
         </div>
       </div>
-      <div class="card" style="width: 18rem;">
+      <div class="card bg-dark text-white" style="width: 18rem;">
         <img class="card-img-top" src="/yashterday.github.io/img/decision-tree.png" alt="Card image cap" style="height:220px;">
         <div class="card-body">
           <h5 class="card-title">Heart Disease Predictor</h5>
           <p class="card-text">A decision tree prediction model to predict whether a patient is likely to get heart disease. Uses 13 variables.</p>
-          <a href="heart-disease.html" class="btn btn-primary">Notebook</a>
+          <a href="heart-disease.html" class="btn btn-niceblue">Notebook</a>
         </div>
       </div>
     </div>
