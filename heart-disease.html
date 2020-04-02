@@ -1163,335 +1163,337 @@
       </ul>
     </div>
   </nav>
-  <div class = 'card'>
-    <body>
-      <article class="markdown-body">
-      <h1 class="atx" id="heart-disease-decision-tree-classifier-model">Heart Disease Decision Tree Classifier Model</h1>
-    <h4 class="atx" id="this-database-contains-76-attributes-but-all-published-experiments-refer-to-using-a-subset-of-14-of-them-in-particular-the-cleveland-database-is-the-only-one-that-has-been-used-by-ml-researchers-to-this-date-the-quottargetquot-field-refers-to-the-presence-of-heart-disease-in-the-patient">This database contains 76 attributes, but all published experiments refer to using a subset of 14 of them. In particular, the Cleveland database is the only one that has been used by ML researchers to this date. The "target" field refers to the presence of heart disease in the patient.</h4>
-    <h1 class="atx" id="1--get-the-data-ready">1.  Get the Data Ready</h1>
-    <pre><code class="fenced-code-block language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
-    <span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
-    <span class="token keyword">import</span> matplotlib <span class="token keyword">as</span> plt
-    <span class="token keyword">import</span> seaborn <span class="token keyword">as</span> sns
-    <span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>tree <span class="token keyword">import</span> DecisionTreeClassifier
-    <span class="token operator">%</span>matplotlib inline
-    </code></pre>
-    <pre><code class="fenced-code-block language-python"><span class="token comment"># the heart.csv file can be found in the github along with this notebook</span>
-    df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'heart.csv'</span><span class="token punctuation">)</span>
-    df<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token punctuation">)</span>
-    </code></pre>
-    <table class="dataframe" border="1">
-      <thead>
-        <tr style="text-align: right;">
-          <th></th>
-          <th>age</th>
-          <th>sex</th>
-          <th>cp</th>
-          <th>trestbps</th>
-          <th>chol</th>
-          <th>fbs</th>
-          <th>restecg</th>
-          <th>thalach</th>
-          <th>exang</th>
-          <th>oldpeak</th>
-          <th>slope</th>
-          <th>ca</th>
-          <th>thal</th>
-          <th>target</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>0</th>
-          <td>63</td>
-          <td>1</td>
-          <td>3</td>
-          <td>145</td>
-          <td>233</td>
-          <td>1</td>
-          <td>0</td>
-          <td>150</td>
-          <td>0</td>
-          <td>2.3</td>
-          <td>0</td>
-          <td>0</td>
-          <td>1</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <th>1</th>
-          <td>37</td>
-          <td>1</td>
-          <td>2</td>
-          <td>130</td>
-          <td>250</td>
-          <td>0</td>
-          <td>1</td>
-          <td>187</td>
-          <td>0</td>
-          <td>3.5</td>
-          <td>0</td>
-          <td>0</td>
-          <td>2</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <th>2</th>
-          <td>41</td>
-          <td>0</td>
-          <td>1</td>
-          <td>130</td>
-          <td>204</td>
-          <td>0</td>
-          <td>0</td>
-          <td>172</td>
-          <td>0</td>
-          <td>1.4</td>
-          <td>2</td>
-          <td>0</td>
-          <td>2</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <th>3</th>
-          <td>56</td>
-          <td>1</td>
-          <td>1</td>
-          <td>120</td>
-          <td>236</td>
-          <td>0</td>
-          <td>1</td>
-          <td>178</td>
-          <td>0</td>
-          <td>0.8</td>
-          <td>2</td>
-          <td>0</td>
-          <td>2</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <th>4</th>
-          <td>57</td>
-          <td>0</td>
-          <td>0</td>
-          <td>120</td>
-          <td>354</td>
-          <td>0</td>
-          <td>1</td>
-          <td>163</td>
-          <td>1</td>
-          <td>0.6</td>
-          <td>2</td>
-          <td>0</td>
-          <td>2</td>
-          <td>1</td>
-        </tr>
-      </tbody>
-    </table>
-  
-  
-    <pre><code class="fenced-code-block language-python"><span class="token comment">#double check to see if there's some balance to the amount of 1s and 0s for the targets</span>
-    df<span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>value_counts<span class="token punctuation">(</span><span class="token punctuation">)</span>
-    </code></pre>
-    <pre><code class="indented-code-block">1    165
-    0    138
-    Name: target, dtype: int64
-    </code></pre>
-    <h4 class="atx" id="i-converted-the-1s-and-0s-into-yes-and-no-as-well-as-rename-the-column-to-ensure-it-would-be-easier-for-viewers-to-read-later-on">I converted the 1s and 0s into Yes and No as well as rename the column to ensure it would be easier for viewers to read later on.</h4>
-    <pre><code class="fenced-code-block language-python">df<span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">]</span> <span class="token operator">=</span> df<span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">'no'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    df<span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">]</span> <span class="token operator">=</span> df<span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'yes'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    df <span class="token operator">=</span> df<span class="token punctuation">.</span>rename<span class="token punctuation">(</span>columns<span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">'target'</span><span class="token punctuation">:</span> <span class="token string">'heart_disease'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
-    </code></pre>
-    <pre><code class="fenced-code-block language-python"><span class="token comment"># making sure that our values are in the correct form for our shift to a numpy array</span>
-    df<span class="token punctuation">.</span>dtypes
-    </code></pre>
-    <pre><code class="indented-code-block">age                int64
-    sex                int64
-    cp                 int64
-    trestbps           int64
-    chol               int64
-    fbs                int64
-    restecg            int64
-    thalach            int64
-    exang              int64
-    oldpeak          float64
-    slope              int64
-    ca                 int64
-    thal               int64
-    heart_disease     object
-    dtype: object
-  
-    age                int64
-    sex                int64
-    cp                 int64
-    trestbps           int64
-    chol               int64
-    fbs                int64
-    restecg            int64
-    thalach            int64
-    exang              int64
-    oldpeak          float64
-    slope              int64
-    ca                 int64
-    thal               int64
-    heart_disease     object
-    dtype: object
-    </code></pre>
-    <h1 class="atx" id="2--pre-processing">2.  Pre-Processing</h1>
-    <h4 class="atx" id="get-your-arrays-ready-for-the-decision-tree-model-and-create-one-array-with-the-independent-variables-and-one-without-to-use-for-predictions-in-the-future">Get your arrays ready for the decision tree model and create one array with the independent variables and one without to use for predictions in the future</h4>
-    <pre><code class="fenced-code-block language-python"><span class="token comment">#note the one-hot encoding was already present in the data set so didn't need to be done</span>
-    X <span class="token operator">=</span> df<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">'age'</span><span class="token punctuation">,</span> <span class="token string">'sex'</span><span class="token punctuation">,</span> <span class="token string">'cp'</span><span class="token punctuation">,</span> <span class="token string">'trestbps'</span><span class="token punctuation">,</span> <span class="token string">'chol'</span><span class="token punctuation">,</span> <span class="token string">'fbs'</span><span class="token punctuation">,</span> <span class="token string">'restecg'</span><span class="token punctuation">,</span> <span class="token string">'thalach'</span><span class="token punctuation">,</span> <span class="token string">'exang'</span><span class="token punctuation">,</span> <span class="token string">'oldpeak'</span><span class="token punctuation">,</span> <span class="token string">'slope'</span><span class="token punctuation">,</span> <span class="token string">'ca'</span><span class="token punctuation">,</span> <span class="token string">'thal'</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">.</span>values
-    X<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span>
-    </code></pre>
-    <pre><code class="indented-code-block">array([[ 63. ,   1. ,   3. , 145. , 233. ,   1. ,   0. , 150. ,   0. ,
-              2.3,   0. ,   0. ,   1. ],
-          [ 37. ,   1. ,   2. , 130. , 250. ,   0. ,   1. , 187. ,   0. ,
-              3.5,   0. ,   0. ,   2. ],
-          [ 41. ,   0. ,   1. , 130. , 204. ,   0. ,   0. , 172. ,   0. ,
-              1.4,   2. ,   0. ,   2. ],
-          [ 56. ,   1. ,   1. , 120. , 236. ,   0. ,   1. , 178. ,   0. ,
-              0.8,   2. ,   0. ,   2. ],
-          [ 57. ,   0. ,   0. , 120. , 354. ,   0. ,   1. , 163. ,   1. ,
-              0.6,   2. ,   0. ,   2. ]])
-    </code></pre>
-    <pre><code class="fenced-code-block language-python">y <span class="token operator">=</span> df<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">'heart_disease'</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
-    y<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span>
-    </code></pre>
-    <div>
-    &lt;style scoped&gt;
-        .dataframe tbody tr th:only-of-type {
-            vertical-align: middle;
-        }
-  
-    <pre><code class="indented-code-block">.dataframe tbody tr th {
-        vertical-align: top;
-    }
-  
-    .dataframe thead th {
-        text-align: right;
-    }
-    </code></pre>
-    <p>&lt;/style&gt;</p>
-    <table class="dataframe" border="1">
-      <thead>
-        <tr style="text-align: right;">
-          <th></th>
-          <th>heart_disease</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>0</th>
-          <td>yes</td>
-        </tr>
-        <tr>
-          <th>1</th>
-          <td>yes</td>
-        </tr>
-        <tr>
-          <th>2</th>
-          <td>yes</td>
-        </tr>
-        <tr>
-          <th>3</th>
-          <td>yes</td>
-        </tr>
-        <tr>
-          <th>4</th>
-          <td>yes</td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="container">
+    <div class = 'card'>
+      <body>
+        <article class="markdown-body">
+        <h1 class="atx" id="heart-disease-decision-tree-classifier-model">Heart Disease Decision Tree Classifier Model</h1>
+      <h4 class="atx" id="this-database-contains-76-attributes-but-all-published-experiments-refer-to-using-a-subset-of-14-of-them-in-particular-the-cleveland-database-is-the-only-one-that-has-been-used-by-ml-researchers-to-this-date-the-quottargetquot-field-refers-to-the-presence-of-heart-disease-in-the-patient">This database contains 76 attributes, but all published experiments refer to using a subset of 14 of them. In particular, the Cleveland database is the only one that has been used by ML researchers to this date. The "target" field refers to the presence of heart disease in the patient.</h4>
+      <h1 class="atx" id="1--get-the-data-ready">1.  Get the Data Ready</h1>
+      <pre><code class="fenced-code-block language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
+      <span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+      <span class="token keyword">import</span> matplotlib <span class="token keyword">as</span> plt
+      <span class="token keyword">import</span> seaborn <span class="token keyword">as</span> sns
+      <span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>tree <span class="token keyword">import</span> DecisionTreeClassifier
+      <span class="token operator">%</span>matplotlib inline
+      </code></pre>
+      <pre><code class="fenced-code-block language-python"><span class="token comment"># the heart.csv file can be found in the github along with this notebook</span>
+      df <span class="token operator">=</span> pd<span class="token punctuation">.</span>read_csv<span class="token punctuation">(</span><span class="token string">'heart.csv'</span><span class="token punctuation">)</span>
+      df<span class="token punctuation">.</span>head<span class="token punctuation">(</span><span class="token punctuation">)</span>
+      </code></pre>
+      <table class="dataframe" border="1">
+        <thead>
+          <tr style="text-align: right;">
+            <th></th>
+            <th>age</th>
+            <th>sex</th>
+            <th>cp</th>
+            <th>trestbps</th>
+            <th>chol</th>
+            <th>fbs</th>
+            <th>restecg</th>
+            <th>thalach</th>
+            <th>exang</th>
+            <th>oldpeak</th>
+            <th>slope</th>
+            <th>ca</th>
+            <th>thal</th>
+            <th>target</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>0</th>
+            <td>63</td>
+            <td>1</td>
+            <td>3</td>
+            <td>145</td>
+            <td>233</td>
+            <td>1</td>
+            <td>0</td>
+            <td>150</td>
+            <td>0</td>
+            <td>2.3</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <th>1</th>
+            <td>37</td>
+            <td>1</td>
+            <td>2</td>
+            <td>130</td>
+            <td>250</td>
+            <td>0</td>
+            <td>1</td>
+            <td>187</td>
+            <td>0</td>
+            <td>3.5</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <th>2</th>
+            <td>41</td>
+            <td>0</td>
+            <td>1</td>
+            <td>130</td>
+            <td>204</td>
+            <td>0</td>
+            <td>0</td>
+            <td>172</td>
+            <td>0</td>
+            <td>1.4</td>
+            <td>2</td>
+            <td>0</td>
+            <td>2</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <th>3</th>
+            <td>56</td>
+            <td>1</td>
+            <td>1</td>
+            <td>120</td>
+            <td>236</td>
+            <td>0</td>
+            <td>1</td>
+            <td>178</td>
+            <td>0</td>
+            <td>0.8</td>
+            <td>2</td>
+            <td>0</td>
+            <td>2</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <th>4</th>
+            <td>57</td>
+            <td>0</td>
+            <td>0</td>
+            <td>120</td>
+            <td>354</td>
+            <td>0</td>
+            <td>1</td>
+            <td>163</td>
+            <td>1</td>
+            <td>0.6</td>
+            <td>2</td>
+            <td>0</td>
+            <td>2</td>
+            <td>1</td>
+          </tr>
+        </tbody>
+      </table>
+    
+    
+      <pre><code class="fenced-code-block language-python"><span class="token comment">#double check to see if there's some balance to the amount of 1s and 0s for the targets</span>
+      df<span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>value_counts<span class="token punctuation">(</span><span class="token punctuation">)</span>
+      </code></pre>
+      <pre><code class="indented-code-block">1    165
+      0    138
+      Name: target, dtype: int64
+      </code></pre>
+      <h4 class="atx" id="i-converted-the-1s-and-0s-into-yes-and-no-as-well-as-rename-the-column-to-ensure-it-would-be-easier-for-viewers-to-read-later-on">I converted the 1s and 0s into Yes and No as well as rename the column to ensure it would be easier for viewers to read later on.</h4>
+      <pre><code class="fenced-code-block language-python">df<span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">]</span> <span class="token operator">=</span> df<span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">'no'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      df<span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">]</span> <span class="token operator">=</span> df<span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'yes'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      df <span class="token operator">=</span> df<span class="token punctuation">.</span>rename<span class="token punctuation">(</span>columns<span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">'target'</span><span class="token punctuation">:</span> <span class="token string">'heart_disease'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+      </code></pre>
+      <pre><code class="fenced-code-block language-python"><span class="token comment"># making sure that our values are in the correct form for our shift to a numpy array</span>
+      df<span class="token punctuation">.</span>dtypes
+      </code></pre>
+      <pre><code class="indented-code-block">age                int64
+      sex                int64
+      cp                 int64
+      trestbps           int64
+      chol               int64
+      fbs                int64
+      restecg            int64
+      thalach            int64
+      exang              int64
+      oldpeak          float64
+      slope              int64
+      ca                 int64
+      thal               int64
+      heart_disease     object
+      dtype: object
+    
+      age                int64
+      sex                int64
+      cp                 int64
+      trestbps           int64
+      chol               int64
+      fbs                int64
+      restecg            int64
+      thalach            int64
+      exang              int64
+      oldpeak          float64
+      slope              int64
+      ca                 int64
+      thal               int64
+      heart_disease     object
+      dtype: object
+      </code></pre>
+      <h1 class="atx" id="2--pre-processing">2.  Pre-Processing</h1>
+      <h4 class="atx" id="get-your-arrays-ready-for-the-decision-tree-model-and-create-one-array-with-the-independent-variables-and-one-without-to-use-for-predictions-in-the-future">Get your arrays ready for the decision tree model and create one array with the independent variables and one without to use for predictions in the future</h4>
+      <pre><code class="fenced-code-block language-python"><span class="token comment">#note the one-hot encoding was already present in the data set so didn't need to be done</span>
+      X <span class="token operator">=</span> df<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">'age'</span><span class="token punctuation">,</span> <span class="token string">'sex'</span><span class="token punctuation">,</span> <span class="token string">'cp'</span><span class="token punctuation">,</span> <span class="token string">'trestbps'</span><span class="token punctuation">,</span> <span class="token string">'chol'</span><span class="token punctuation">,</span> <span class="token string">'fbs'</span><span class="token punctuation">,</span> <span class="token string">'restecg'</span><span class="token punctuation">,</span> <span class="token string">'thalach'</span><span class="token punctuation">,</span> <span class="token string">'exang'</span><span class="token punctuation">,</span> <span class="token string">'oldpeak'</span><span class="token punctuation">,</span> <span class="token string">'slope'</span><span class="token punctuation">,</span> <span class="token string">'ca'</span><span class="token punctuation">,</span> <span class="token string">'thal'</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">.</span>values
+      X<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span>
+      </code></pre>
+      <pre><code class="indented-code-block">array([[ 63. ,   1. ,   3. , 145. , 233. ,   1. ,   0. , 150. ,   0. ,
+                2.3,   0. ,   0. ,   1. ],
+            [ 37. ,   1. ,   2. , 130. , 250. ,   0. ,   1. , 187. ,   0. ,
+                3.5,   0. ,   0. ,   2. ],
+            [ 41. ,   0. ,   1. , 130. , 204. ,   0. ,   0. , 172. ,   0. ,
+                1.4,   2. ,   0. ,   2. ],
+            [ 56. ,   1. ,   1. , 120. , 236. ,   0. ,   1. , 178. ,   0. ,
+                0.8,   2. ,   0. ,   2. ],
+            [ 57. ,   0. ,   0. , 120. , 354. ,   0. ,   1. , 163. ,   1. ,
+                0.6,   2. ,   0. ,   2. ]])
+      </code></pre>
+      <pre><code class="fenced-code-block language-python">y <span class="token operator">=</span> df<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">'heart_disease'</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+      y<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span>
+      </code></pre>
+      <div>
+      &lt;style scoped&gt;
+          .dataframe tbody tr th:only-of-type {
+              vertical-align: middle;
+          }
+    
+      <pre><code class="indented-code-block">.dataframe tbody tr th {
+          vertical-align: top;
+      }
+    
+      .dataframe thead th {
+          text-align: right;
+      }
+      </code></pre>
+      <p>&lt;/style&gt;</p>
+      <table class="dataframe" border="1">
+        <thead>
+          <tr style="text-align: right;">
+            <th></th>
+            <th>heart_disease</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>0</th>
+            <td>yes</td>
+          </tr>
+          <tr>
+            <th>1</th>
+            <td>yes</td>
+          </tr>
+          <tr>
+            <th>2</th>
+            <td>yes</td>
+          </tr>
+          <tr>
+            <th>3</th>
+            <td>yes</td>
+          </tr>
+          <tr>
+            <th>4</th>
+            <td>yes</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    
+      <pre><code class="fenced-code-block language-python"><span class="token comment">#### Now use the train_test split to get training and testing splits for the X and Y arrays</span>
+      </code></pre>
+      <pre><code class="fenced-code-block language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>model_selection <span class="token keyword">import</span> train_test_split
+      </code></pre>
+      <pre><code class="fenced-code-block language-python">X_train<span class="token punctuation">,</span> X_test<span class="token punctuation">,</span> y_train<span class="token punctuation">,</span> y_test <span class="token operator">=</span> train_test_split<span class="token punctuation">(</span>X<span class="token punctuation">,</span> y<span class="token punctuation">,</span> test_size <span class="token operator">=</span> <span class="token number">0.3</span><span class="token punctuation">,</span> random_state <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span>
+      <span class="token comment">#check size of each set</span>
+      X_train<span class="token punctuation">.</span>shape
+      y_train<span class="token punctuation">.</span>shape
+      X_test<span class="token punctuation">.</span>shape
+      y_test<span class="token punctuation">.</span>shape
+      </code></pre>
+      <pre><code class="indented-code-block">(91, 1)
+      </code></pre>
+      <h1 class="atx" id="4-prediction-time">4. Prediction Time</h1>
+      <h4 class="atx" id="we-will-be-using-a-decision-tree-classifier-model-with-an-quotentropyquot-criterion-to-have-the-tree-pick-columns-by-best-information-availability">We will be using a decision tree classifier model with an "entropy" criterion to have the tree pick columns by best information availability.</h4>
+      <pre><code class="fenced-code-block language-python">heartTree <span class="token operator">=</span> DecisionTreeClassifier<span class="token punctuation">(</span>criterion<span class="token operator">=</span><span class="token string">"entropy"</span><span class="token punctuation">)</span>
+      heartTree
+      </code></pre>
+      <pre><code class="indented-code-block">DecisionTreeClassifier(class_weight=None, criterion='entropy', max_depth=None,
+                            max_features=None, max_leaf_nodes=None,
+                            min_impurity_decrease=0.0, min_impurity_split=None,
+                            min_samples_leaf=1, min_samples_split=2,
+                            min_weight_fraction_leaf=0.0, presort=False,
+                            random_state=None, splitter='best')
+      </code></pre>
+      <pre><code class="fenced-code-block language-python">heartTree<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X_train<span class="token punctuation">,</span>y_train<span class="token punctuation">)</span>
+      </code></pre>
+      <pre><code class="indented-code-block">DecisionTreeClassifier(class_weight=None, criterion='entropy', max_depth=None,
+                            max_features=None, max_leaf_nodes=None,
+                            min_impurity_decrease=0.0, min_impurity_split=None,
+                            min_samples_leaf=1, min_samples_split=2,
+                            min_weight_fraction_leaf=0.0, presort=False,
+                            random_state=None, splitter='best')
+      </code></pre>
+      <h4 class="atx" id="using-the-model-we-just-made-with-hearttree-we-will-now-apply-the-tree-to-the-testing-sets-to-check-how-accurate-our-model-really-is">Using the model we just made with heartTree, we will now apply the tree to the testing sets to check how accurate our model really is</h4>
+      <pre><code class="fenced-code-block language-python">predTree <span class="token operator">=</span> heartTree<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>X_test<span class="token punctuation">)</span>
+      </code></pre>
+      <pre><code class="fenced-code-block language-python"><span class="token keyword">print</span> <span class="token punctuation">(</span>predTree<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+      <span class="token keyword">print</span> <span class="token punctuation">(</span>y_test<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+      </code></pre>
+      <pre><code class="indented-code-block">['yes' 'yes' 'yes' 'yes' 'yes']
+          heart_disease
+      245            no
+      162           yes
+      10            yes
+      161           yes
+      73            yes
+      </code></pre>
+      <h4 class="atx" id="it-seems-like-the-model-is-not-100-accurate-but-lets-check-the-accuracy-score-to-get-an-idea-of-all-the-predictions">It seems like the model is not 100% accurate but lets check the accuracy score to get an idea of all the predictions</h4>
+      <pre><code class="fenced-code-block language-python"><span class="token keyword">from</span> sklearn <span class="token keyword">import</span> metrics
+      <span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>metrics <span class="token keyword">import</span> mean_squared_error
+      x <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>predTree<span class="token punctuation">)</span>
+    
+      <span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+      <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"DecisionTrees's Accuracy: "</span><span class="token punctuation">,</span> metrics<span class="token punctuation">.</span>accuracy_score<span class="token punctuation">(</span>y_test<span class="token punctuation">,</span> predTree<span class="token punctuation">)</span><span class="token punctuation">)</span>
+      </code></pre>
+      <pre><code class="indented-code-block">DecisionTrees's Accuracy:  0.8131868131868132
+      </code></pre>
+      <pre><code class="fenced-code-block language-python"><span class="token keyword">from</span> sklearn <span class="token keyword">import</span> preprocessing
+      <span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>preprocessing <span class="token keyword">import</span> OneHotEncoder
+    
+      enc <span class="token operator">=</span> preprocessing<span class="token punctuation">.</span>OneHotEncoder<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    
+      enc<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>y_test<span class="token punctuation">)</span>
+    
+      onehotlabels <span class="token operator">=</span> enc<span class="token punctuation">.</span>transform<span class="token punctuation">(</span>y_test<span class="token punctuation">)</span><span class="token punctuation">.</span>toarray<span class="token punctuation">(</span><span class="token punctuation">)</span>
+      onehotlabels<span class="token punctuation">.</span>shape
+    
+      enc<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
+    
+      onehotlabels2 <span class="token operator">=</span> enc<span class="token punctuation">.</span>transform<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">.</span>toarray<span class="token punctuation">(</span><span class="token punctuation">)</span>
+      onehotlabels2<span class="token punctuation">.</span>shape
+      </code></pre>
+      <pre><code class="indented-code-block">(91, 2)
+      </code></pre>
+      <pre><code class="fenced-code-block language-python"><span class="token keyword">def</span> <span class="token function">rmse</span><span class="token punctuation">(</span>y_actual<span class="token punctuation">,</span> y_pred<span class="token punctuation">)</span><span class="token punctuation">:</span>
+          <span class="token keyword">return</span> np<span class="token punctuation">.</span>sqrt<span class="token punctuation">(</span>mean_squared_error<span class="token punctuation">(</span>y_actual<span class="token punctuation">,</span> y_pred<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    
+      <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'RMSE score on train data:'</span><span class="token punctuation">)</span>
+      <span class="token keyword">print</span><span class="token punctuation">(</span>rmse<span class="token punctuation">(</span>onehotlabels<span class="token punctuation">,</span> onehotlabels2<span class="token punctuation">)</span><span class="token punctuation">)</span>
+      </code></pre>
+      <pre><code class="indented-code-block">RMSE score on train data:
+      0.4322189107537832
+      </code></pre>
+      <h3 class="atx" id="very-high-root-mean-squre-error-i39ll-be-coming-back-to-improve-this-model">Very high root mean squre error, I'll be coming back to improve this model!</h3>
+    
+        </article>
+      </body>
     </div>
-  
-    <pre><code class="fenced-code-block language-python"><span class="token comment">#### Now use the train_test split to get training and testing splits for the X and Y arrays</span>
-    </code></pre>
-    <pre><code class="fenced-code-block language-python"><span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>model_selection <span class="token keyword">import</span> train_test_split
-    </code></pre>
-    <pre><code class="fenced-code-block language-python">X_train<span class="token punctuation">,</span> X_test<span class="token punctuation">,</span> y_train<span class="token punctuation">,</span> y_test <span class="token operator">=</span> train_test_split<span class="token punctuation">(</span>X<span class="token punctuation">,</span> y<span class="token punctuation">,</span> test_size <span class="token operator">=</span> <span class="token number">0.3</span><span class="token punctuation">,</span> random_state <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span>
-    <span class="token comment">#check size of each set</span>
-    X_train<span class="token punctuation">.</span>shape
-    y_train<span class="token punctuation">.</span>shape
-    X_test<span class="token punctuation">.</span>shape
-    y_test<span class="token punctuation">.</span>shape
-    </code></pre>
-    <pre><code class="indented-code-block">(91, 1)
-    </code></pre>
-    <h1 class="atx" id="4-prediction-time">4. Prediction Time</h1>
-    <h4 class="atx" id="we-will-be-using-a-decision-tree-classifier-model-with-an-quotentropyquot-criterion-to-have-the-tree-pick-columns-by-best-information-availability">We will be using a decision tree classifier model with an "entropy" criterion to have the tree pick columns by best information availability.</h4>
-    <pre><code class="fenced-code-block language-python">heartTree <span class="token operator">=</span> DecisionTreeClassifier<span class="token punctuation">(</span>criterion<span class="token operator">=</span><span class="token string">"entropy"</span><span class="token punctuation">)</span>
-    heartTree
-    </code></pre>
-    <pre><code class="indented-code-block">DecisionTreeClassifier(class_weight=None, criterion='entropy', max_depth=None,
-                          max_features=None, max_leaf_nodes=None,
-                          min_impurity_decrease=0.0, min_impurity_split=None,
-                          min_samples_leaf=1, min_samples_split=2,
-                          min_weight_fraction_leaf=0.0, presort=False,
-                          random_state=None, splitter='best')
-    </code></pre>
-    <pre><code class="fenced-code-block language-python">heartTree<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X_train<span class="token punctuation">,</span>y_train<span class="token punctuation">)</span>
-    </code></pre>
-    <pre><code class="indented-code-block">DecisionTreeClassifier(class_weight=None, criterion='entropy', max_depth=None,
-                          max_features=None, max_leaf_nodes=None,
-                          min_impurity_decrease=0.0, min_impurity_split=None,
-                          min_samples_leaf=1, min_samples_split=2,
-                          min_weight_fraction_leaf=0.0, presort=False,
-                          random_state=None, splitter='best')
-    </code></pre>
-    <h4 class="atx" id="using-the-model-we-just-made-with-hearttree-we-will-now-apply-the-tree-to-the-testing-sets-to-check-how-accurate-our-model-really-is">Using the model we just made with heartTree, we will now apply the tree to the testing sets to check how accurate our model really is</h4>
-    <pre><code class="fenced-code-block language-python">predTree <span class="token operator">=</span> heartTree<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>X_test<span class="token punctuation">)</span>
-    </code></pre>
-    <pre><code class="fenced-code-block language-python"><span class="token keyword">print</span> <span class="token punctuation">(</span>predTree<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-    <span class="token keyword">print</span> <span class="token punctuation">(</span>y_test<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-    </code></pre>
-    <pre><code class="indented-code-block">['yes' 'yes' 'yes' 'yes' 'yes']
-        heart_disease
-    245            no
-    162           yes
-    10            yes
-    161           yes
-    73            yes
-    </code></pre>
-    <h4 class="atx" id="it-seems-like-the-model-is-not-100-accurate-but-lets-check-the-accuracy-score-to-get-an-idea-of-all-the-predictions">It seems like the model is not 100% accurate but lets check the accuracy score to get an idea of all the predictions</h4>
-    <pre><code class="fenced-code-block language-python"><span class="token keyword">from</span> sklearn <span class="token keyword">import</span> metrics
-    <span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>metrics <span class="token keyword">import</span> mean_squared_error
-    x <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>predTree<span class="token punctuation">)</span>
-  
-    <span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
-    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"DecisionTrees's Accuracy: "</span><span class="token punctuation">,</span> metrics<span class="token punctuation">.</span>accuracy_score<span class="token punctuation">(</span>y_test<span class="token punctuation">,</span> predTree<span class="token punctuation">)</span><span class="token punctuation">)</span>
-    </code></pre>
-    <pre><code class="indented-code-block">DecisionTrees's Accuracy:  0.8131868131868132
-    </code></pre>
-    <pre><code class="fenced-code-block language-python"><span class="token keyword">from</span> sklearn <span class="token keyword">import</span> preprocessing
-    <span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>preprocessing <span class="token keyword">import</span> OneHotEncoder
-  
-    enc <span class="token operator">=</span> preprocessing<span class="token punctuation">.</span>OneHotEncoder<span class="token punctuation">(</span><span class="token punctuation">)</span>
-  
-    enc<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>y_test<span class="token punctuation">)</span>
-  
-    onehotlabels <span class="token operator">=</span> enc<span class="token punctuation">.</span>transform<span class="token punctuation">(</span>y_test<span class="token punctuation">)</span><span class="token punctuation">.</span>toarray<span class="token punctuation">(</span><span class="token punctuation">)</span>
-    onehotlabels<span class="token punctuation">.</span>shape
-  
-    enc<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
-  
-    onehotlabels2 <span class="token operator">=</span> enc<span class="token punctuation">.</span>transform<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">.</span>toarray<span class="token punctuation">(</span><span class="token punctuation">)</span>
-    onehotlabels2<span class="token punctuation">.</span>shape
-    </code></pre>
-    <pre><code class="indented-code-block">(91, 2)
-    </code></pre>
-    <pre><code class="fenced-code-block language-python"><span class="token keyword">def</span> <span class="token function">rmse</span><span class="token punctuation">(</span>y_actual<span class="token punctuation">,</span> y_pred<span class="token punctuation">)</span><span class="token punctuation">:</span>
-        <span class="token keyword">return</span> np<span class="token punctuation">.</span>sqrt<span class="token punctuation">(</span>mean_squared_error<span class="token punctuation">(</span>y_actual<span class="token punctuation">,</span> y_pred<span class="token punctuation">)</span><span class="token punctuation">)</span>
-  
-    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'RMSE score on train data:'</span><span class="token punctuation">)</span>
-    <span class="token keyword">print</span><span class="token punctuation">(</span>rmse<span class="token punctuation">(</span>onehotlabels<span class="token punctuation">,</span> onehotlabels2<span class="token punctuation">)</span><span class="token punctuation">)</span>
-    </code></pre>
-    <pre><code class="indented-code-block">RMSE score on train data:
-    0.4322189107537832
-    </code></pre>
-    <h3 class="atx" id="very-high-root-mean-squre-error-i39ll-be-coming-back-to-improve-this-model">Very high root mean squre error, I'll be coming back to improve this model!</h3>
-  
-      </article>
-    </body>
   </div>
   
 </html>
