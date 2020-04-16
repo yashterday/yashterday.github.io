@@ -1177,9 +1177,9 @@
   <body>
     <article class="markdown-body">
     <h1 class="atx" id="housing-prices-regression-analysis">Housing Prices Regression Analysis</h1>
-  <h3 class="atx" id="kaggle-competition-httpswwwkagglecomchouse-prices-advanced-regression-techniquesoverview">Kaggle Competition: <a href="https://www.kaggle.com/c/house-prices-advanced-regression-techniques/overview">https://www.kaggle.com/c/house-prices-advanced-regression-techniques/overview</a></h3>
-  <h3 class="atx" id="i-used-logistic-regressions-for-my-analysis-with-this-dataset-as-i-still-need-work-with-my-more-advanced-machine-learning-techniques">I used logistic regressions for my analysis with this dataset as I still need work with my more advanced machine learning techniques</h3>
-  <h2 class="atx" id="data-handling">Data Handling</h2>
+    <p style="font-size:125%;">Kaggle Competition: <a href="https://www.kaggle.com/c/house-prices-advanced-regression-techniques/overview">https://www.kaggle.com/c/house-prices-advanced-regression-techniques/overview</a></p>
+    <p style="font-size:125%;">I used logistic regressions for my analysis with this dataset as I still need work with my more advanced machine learning techniques</p>
+  <h2>1. Data Handling</h2>
   <pre><code class="fenced-code-block language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
   <span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
   <span class="token keyword">import</span> matplotlib <span class="token keyword">as</span> plt
@@ -1237,7 +1237,7 @@
   SaleCondition     object
   Length: 80, dtype: object
   </code></pre>
-  <h3 class="atx" id="we-need-to-replace-the-na-values-in-the-data-set-with-either-0-for-numeric-or-most-commonquotnonequot-for-categoric-depending-on-how-the-variable-is-being-treated">We need to replace the NA values in the data set with either 0 for numeric or most common/"None" for categoric depending on how the variable is being treated</h3>
+  <p style="font-size:125%;">We need to replace the NA values in the data set with either 0 for numeric or most common/"None" for categoric depending on how the variable is being treated</p>
   <pre><code class="fenced-code-block language-python"><span class="token keyword">for</span> column <span class="token keyword">in</span> features<span class="token punctuation">:</span>
 
       <span class="token comment"># populating with 0</span>
@@ -1407,8 +1407,8 @@
   <p>5 rows × 80 columns</p>
 
 
-  <h2 class="atx" id="feature-engineering">Feature Engineering</h2>
-  <h3 class="atx" id="now-that-we-have-the-data-processed-its-time-to-add-additional-independent-variables-as-well-to-help-the-prediction-model-have-a-far-more-accurate-prediction">Now that we have the data processed its time to add additional independent variables as well to help the prediction model have a far more accurate prediction</h3>
+  <h2>2. Feature Engineering</h2>
+  <p style="font-size:125%;">Now that we have the data processed its time to add additional independent variables as well to help the prediction model have a far more accurate prediction</p>
   <pre><code class="fenced-code-block language-python">
   features<span class="token punctuation">[</span><span class="token string">'total_yrs'</span><span class="token punctuation">]</span> <span class="token operator">=</span> features<span class="token punctuation">[</span><span class="token string">'YearRemodAdd'</span><span class="token punctuation">]</span> <span class="token operator">-</span> features<span class="token punctuation">[</span><span class="token string">'YearBuilt'</span><span class="token punctuation">]</span>  
   features<span class="token punctuation">[</span><span class="token string">'total_sqrft'</span><span class="token punctuation">]</span> <span class="token operator">=</span> features<span class="token punctuation">[</span><span class="token string">'TotalBsmtSF'</span><span class="token punctuation">]</span> <span class="token operator">+</span> features<span class="token punctuation">[</span><span class="token string">'1stFlrSF'</span><span class="token punctuation">]</span> <span class="token operator">+</span> features<span class="token punctuation">[</span><span class="token string">'2ndFlrSF'</span><span class="token punctuation">]</span>
@@ -1629,7 +1629,7 @@
   CentralAir      0
   dtype: int64
   </code></pre>
-  <h2 id="time-for-model-building-and-fitting" class="atx">Time for Model Building and Fitting</h2>
+  <h2>3. Model Building and Fitting</h2>
   <pre><code class="fenced-code-block language-python"><span class="token comment">#one hot encoding to make it easier and faster for the model</span>
   features_2 <span class="token operator">=</span> pd<span class="token punctuation">.</span>get_dummies<span class="token punctuation">(</span>features<span class="token punctuation">)</span><span class="token punctuation">.</span>reset_index<span class="token punctuation">(</span>drop<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
 
@@ -1658,7 +1658,7 @@
   SaleCondition_Partial      uint8
   Length: 327, dtype: object
   </code></pre>
-  <h3 id="for-this-current-iteration-of-the-regression-we-only-used-ridge-regression-with-10-k-folds-but-i-will-start-to-stack-different-models-as-my-skillset-grows" class="atx">For this current iteration of the Regression, we only used ridge regression with 10 k-folds, but I will start to stack different models as my skillset grows</h3>
+  <p style="font-size:125%;">For this current iteration of the Regression, we only used ridge regression with 10 k-folds, but I will start to stack different models as my skillset grows</p>
   <pre><code class="fenced-code-block language-python"><span class="token comment">#import models</span>
   <span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>preprocessing <span class="token keyword">import</span> RobustScaler
   <span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>model_selection <span class="token keyword">import</span> KFold
@@ -1689,7 +1689,7 @@
   </code></pre>
   <pre><code class="indented-code-block">0.1348839439429676
   </code></pre>
-  <h3 id="we-have-a-solid-root-mean-square-error-but-i39m-confident-that-once-i-start-using-stacked-models-this-error-will-drop-closer-to-0" class="atx">We have a solid Root Mean Square error, but I&#39;m confident that once I start using stacked models, this error will drop closer to 0</h3>
+  <p style="font-size:125%;">We have a solid Root Mean Square error, but I&#39;m confident that once I start using stacked models, this error will drop closer to 0</p>
   </style></div>
     </article>
   </body>
