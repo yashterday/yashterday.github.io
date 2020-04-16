@@ -1176,7 +1176,7 @@
         <article class="markdown-body">
         <h1>Heart Disease Decision Tree Classifier Model</h1>
       <p style="font-size:125%;">This database contains 76 attributes, but all published experiments refer to using a subset of 14 of them. In particular, the Cleveland database is the only one that has been used by ML researchers to this date. The "target" field refers to the presence of heart disease in the patient.</p>
-      <h1 class="atx" id="1--get-the-data-ready">1.  Get the Data Ready</h1>
+      <h2>1.  Get the Data Ready</h2>
       <pre><code class="fenced-code-block language-python"><span class="token keyword">import</span> pandas <span class="token keyword">as</span> pd
       <span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
       <span class="token keyword">import</span> matplotlib <span class="token keyword">as</span> plt
@@ -1305,7 +1305,7 @@
       0    138
       Name: target, dtype: int64
       </code></pre>
-      <h4 class="atx" id="i-converted-the-1s-and-0s-into-yes-and-no-as-well-as-rename-the-column-to-ensure-it-would-be-easier-for-viewers-to-read-later-on">I converted the 1s and 0s into Yes and No as well as rename the column to ensure it would be easier for viewers to read later on.</h4>
+      <p style="font-size:125%;">I converted the 1s and 0s into Yes and No as well as rename the column to ensure it would be easier for viewers to read later on.</p>
       <pre><code class="fenced-code-block language-python">df<span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">]</span> <span class="token operator">=</span> df<span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">'no'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
       df<span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">]</span> <span class="token operator">=</span> df<span class="token punctuation">[</span><span class="token string">'target'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'yes'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
       df <span class="token operator">=</span> df<span class="token punctuation">.</span>rename<span class="token punctuation">(</span>columns<span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">'target'</span><span class="token punctuation">:</span> <span class="token string">'heart_disease'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
@@ -1345,8 +1345,8 @@
       heart_disease     object
       dtype: object
       </code></pre>
-      <h1 class="atx" id="2--pre-processing">2.  Pre-Processing</h1>
-      <h4 class="atx" id="get-your-arrays-ready-for-the-decision-tree-model-and-create-one-array-with-the-independent-variables-and-one-without-to-use-for-predictions-in-the-future">Get your arrays ready for the decision tree model and create one array with the independent variables and one without to use for predictions in the future</h4>
+      <h2>2.  Pre-Processing</h2>
+        <p style="font-size:125%;">Get your arrays ready for the decision tree model and create one array with the independent variables and one without to use for predictions in the future</p>
       <pre><code class="fenced-code-block language-python"><span class="token comment">#note the one-hot encoding was already present in the data set so didn't need to be done</span>
       X <span class="token operator">=</span> df<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">'age'</span><span class="token punctuation">,</span> <span class="token string">'sex'</span><span class="token punctuation">,</span> <span class="token string">'cp'</span><span class="token punctuation">,</span> <span class="token string">'trestbps'</span><span class="token punctuation">,</span> <span class="token string">'chol'</span><span class="token punctuation">,</span> <span class="token string">'fbs'</span><span class="token punctuation">,</span> <span class="token string">'restecg'</span><span class="token punctuation">,</span> <span class="token string">'thalach'</span><span class="token punctuation">,</span> <span class="token string">'exang'</span><span class="token punctuation">,</span> <span class="token string">'oldpeak'</span><span class="token punctuation">,</span> <span class="token string">'slope'</span><span class="token punctuation">,</span> <span class="token string">'ca'</span><span class="token punctuation">,</span> <span class="token string">'thal'</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">.</span>values
       X<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span>
@@ -1425,8 +1425,8 @@
       </code></pre>
       <pre><code class="indented-code-block">(91, 1)
       </code></pre>
-      <h1 class="atx" id="4-prediction-time">4. Prediction Time</h1>
-      <h4 class="atx" id="we-will-be-using-a-decision-tree-classifier-model-with-an-quotentropyquot-criterion-to-have-the-tree-pick-columns-by-best-information-availability">We will be using a decision tree classifier model with an "entropy" criterion to have the tree pick columns by best information availability.</h4>
+      <h2>3. Prediction Time</h2>
+      <p style="font-size:125%;">We will be using a decision tree classifier model with an "entropy" criterion to have the tree pick columns by best information availability.</p>
       <pre><code class="fenced-code-block language-python">heartTree <span class="token operator">=</span> DecisionTreeClassifier<span class="token punctuation">(</span>criterion<span class="token operator">=</span><span class="token string">"entropy"</span><span class="token punctuation">)</span>
       heartTree
       </code></pre>
@@ -1446,7 +1446,7 @@
                             min_weight_fraction_leaf=0.0, presort=False,
                             random_state=None, splitter='best')
       </code></pre>
-      <h4 class="atx" id="using-the-model-we-just-made-with-hearttree-we-will-now-apply-the-tree-to-the-testing-sets-to-check-how-accurate-our-model-really-is">Using the model we just made with heartTree, we will now apply the tree to the testing sets to check how accurate our model really is</h4>
+      <p style="font-size:125%;">Using the model we just made with heartTree, we will now apply the tree to the testing sets to check how accurate our model really is</p>
       <pre><code class="fenced-code-block language-python">predTree <span class="token operator">=</span> heartTree<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>X_test<span class="token punctuation">)</span>
       </code></pre>
       <pre><code class="fenced-code-block language-python"><span class="token keyword">print</span> <span class="token punctuation">(</span>predTree<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
@@ -1460,7 +1460,7 @@
       161           yes
       73            yes
       </code></pre>
-      <h4 class="atx" id="it-seems-like-the-model-is-not-100-accurate-but-lets-check-the-accuracy-score-to-get-an-idea-of-all-the-predictions">It seems like the model is not 100% accurate but lets check the accuracy score to get an idea of all the predictions</h4>
+      <p style="font-size:125%;">It seems like the model is not 100% accurate but lets check the accuracy score to get an idea of all the predictions</p>
       <pre><code class="fenced-code-block language-python"><span class="token keyword">from</span> sklearn <span class="token keyword">import</span> metrics
       <span class="token keyword">from</span> sklearn<span class="token punctuation">.</span>metrics <span class="token keyword">import</span> mean_squared_error
       x <span class="token operator">=</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>predTree<span class="token punctuation">)</span>
@@ -1496,7 +1496,7 @@
       <pre><code class="indented-code-block">RMSE score on train data:
       0.4322189107537832
       </code></pre>
-      <h3 class="atx" id="very-high-root-mean-squre-error-i39ll-be-coming-back-to-improve-this-model">Very high root mean squre error, I'll be coming back to improve this model!</h3>
+      <p style="font-size:125%;"></p>Very high root mean squre error, I'll be coming back to improve this model!</p>
     
         </article>
       </body>
